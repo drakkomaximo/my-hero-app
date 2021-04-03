@@ -1,7 +1,23 @@
-import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, NavLink, useHistory } from "react-router-dom";
+import { AuthContext } from "../../auth/AuthContex";
+import { linkRoutes } from "../../data/linkRoutes";
+import { types } from "../../types/types";
 
 export const Navbar = () => {
+  const { heroUser, dispatch } = useContext(AuthContext);
+  const history = useHistory()
+
+  const handleLogout = () =>{
+
+    dispatch({
+      type: types.logout
+    })
+
+    history.replace('/login')
+
+  }
+
   return (
     <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
       <Link className="navbar-brand" to="/">
@@ -10,54 +26,29 @@ export const Navbar = () => {
 
       <div className="navbar-collapse">
         <div className="navbar-nav">
-          <NavLink
-            activeClassName="active"
-            className="nav-item nav-link"
-            exact
-            to="/marvel"
-          >
-            Marvel
-          </NavLink>
-
-          <NavLink
-            activeClassName="active"
-            className="nav-item nav-link"
-            exact
-            to="/dc"
-          >
-            DC
-          </NavLink>
-
-          <NavLink
-            activeClassName="active"
-            className="nav-item nav-link"
-            exact
-            to="/bha"
-          >
-            BHA
-          </NavLink>
-
-          <NavLink
-            activeClassName="active"
-            className="nav-item nav-link"
-            exact
-            to="/search"
-          >
-            Search
-          </NavLink>
+          {linkRoutes.map((linkRoute) => (
+            <NavLink
+              key={linkRoute.url}
+              activeClassName="active"
+              className="nav-item nav-link"
+              exact
+              to={linkRoute.url}
+            >
+              {linkRoute.label}
+            </NavLink>
+          ))}
         </div>
       </div>
 
-      <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
+      <div className="d-flex">
         <ul className="navbar-nav ml-auto">
-          <NavLink
-            activeClassName="active"
-            className="nav-item nav-link"
-            exact
-            to="/login"
-          >
-            Logout
-          </NavLink>
+          {heroUser.logged && (
+            <span className="nav-item nav-link text-info">{heroUser.name}</span>
+          )}
+          <button 
+            className="nav-item nav-link btn"
+            onClick={ handleLogout }
+            >Logout</button>
         </ul>
       </div>
     </nav>
