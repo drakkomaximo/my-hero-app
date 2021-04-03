@@ -20,7 +20,6 @@ const SearchScreen = ({ history }) => {
   const HandleSearch = (e) => {
     e.preventDefault();
     history.push(`?q=${searchHero}`);
-    console.log(searchHero)
     reset();
   };
 
